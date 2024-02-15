@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.image{
+    cursor: pointer;
+  }
+  
+  .spe-image{
+    width: 70%;
+    height: auto;
+  
+  }
+  
+  .small-text{
+    font-size: 15px;
+  }
+  
+  .spe-heading{
+    font-size: 5.5rem;
+    font-weight: bold;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .spe-heading{
+      font-size: 3rem;
+  
+    }
+  }
+  
+  @media screen and (max-width: 992px) {
+    .spe-heading{
+      font-size: 4rem;
+  
+    }
+  }
+  
+  
