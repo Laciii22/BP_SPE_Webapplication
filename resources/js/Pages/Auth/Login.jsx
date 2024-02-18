@@ -76,11 +76,11 @@ export default function Login({ status, canResetPassword }) {
                     />
                 </div>
 
-                <div >
+                <div className="d-flex justify-item-center">
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
-                            className="text-decoration-none text-muted me-4"
+                            className="mt-1 text-decoration-none text-muted me-4"
                         >
                             Zabudol si heslo?
                         </Link>

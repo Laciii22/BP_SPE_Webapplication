@@ -5,7 +5,7 @@ const handleScroll = (targetId) => {
     // Adjust the offset based on your layout
     
     if (window.screen.width < 768) {
-      offset = 130;
+      offset = 55;
     }
     else{
       offset = 55;

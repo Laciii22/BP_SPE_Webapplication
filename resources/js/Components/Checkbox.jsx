@@ -3,13 +3,11 @@ import { Form } from 'react-bootstrap';
 
 export default function Checkbox({ className = '', ...props }) {
     return (
-        <Form>
             <Form.Check
                 type="switch"
                 id="custom-switch"
                 label="Zapamätať si"
                 {...props}
             />
-        </Form>
     );
 }

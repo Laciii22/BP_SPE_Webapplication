@@ -3,9 +3,11 @@ import DangerButton from '@/Components/DangerButton';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import Modal from '@/Components/Modal';
-import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import { useForm } from '@inertiajs/react';
+import { Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 export default function DeleteUserForm({ className = '' }) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
@@ -49,22 +51,20 @@ export default function DeleteUserForm({ className = '' }) {
                 <h2 className="text-lg font-medium text-gray-900">Delete Account</h2>
 
                 <p className="mt-1 text-sm text-gray-600">
-                    Once your account is deleted, all of its resources and data will be permanently deleted. Before
-                    deleting your account, please download any data or information that you wish to retain.
+                    Po vymazaní vášho účtu budú všetky jeho zdroje a dáta trvalo odstránené. Pred vymazaním účtu si prosím stiahnite všetky údaje alebo informácie, ktoré chcete zachovať.
                 </p>
             </header>
 
-            <DangerButton onClick={confirmUserDeletion}>Delete Account</DangerButton>
+            <DangerButton onClick={confirmUserDeletion} >Vymazať účet</DangerButton>
 
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
-                        Are you sure you want to delete your account?
+                        Si si istý, že chceš vymazať účet?
                     </h2>
 
                     <p className="mt-1 text-sm text-gray-600">
-                        Once your account is deleted, all of its resources and data will be permanently deleted. Please
-                        enter your password to confirm you would like to permanently delete your account.
+                        Pokiaľ je váš účet vymazaný, všetky jeho zdroje a dáta budú trvalo odstránené. Prosím, zadajte svoje heslo na potvrdenie, že chcete svoj účet trvalo vymazať.
                     </p>
 
                     <div className="mt-6">
@@ -86,10 +86,10 @@ export default function DeleteUserForm({ className = '' }) {
                     </div>
 
                     <div className="mt-6 flex justify-end">
-                        <SecondaryButton onClick={closeModal}>Cancel</SecondaryButton>
+                        <Button onClick={closeModal} className='btn btn-primary'>Zrušiť</Button>
 
                         <DangerButton className="ms-3" disabled={processing}>
-                            Delete Account
+                            Vymazať účet
                         </DangerButton>
                     </div>
                 </form>

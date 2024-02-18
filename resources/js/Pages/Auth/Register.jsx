@@ -37,7 +37,7 @@ export default function Register() {
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value="Meno" />
 
                     <TextInput
                         id="name"
@@ -54,7 +54,7 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value="E-mail" />
 
                     <TextInput
                         id="email"
@@ -71,7 +71,7 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password" value="Heslo" />
 
                     <TextInput
                         id="password"
@@ -88,7 +88,7 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
+                    <InputLabel htmlFor="password_confirmation" value="Potvrď heslo" />
 
                     <TextInput
                         id="password_confirmation"
@@ -104,19 +104,19 @@ export default function Register() {
                     <InputError message={errors.password_confirmation} className="mt-2" />
                 </div>
 
-                <div className="flex items-center justify-end mt-4">
+                <div className="d-flex justify-item-center mt-4">
                     <Link
                         href={route('login')}
-                        className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="mt-1 btn btn-link btn-sm text-muted rounded-md"
                     >
-                        Already registered?
+                        Už máš účet?
                     </Link>
 
                     <Link href="/">
                         <Button className='ms-4'>Hlavná stránka</Button>
                     </Link>
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                    <PrimaryButton className="" disabled={processing}>
                         Registrovať sa
                     </PrimaryButton>
                 </div>

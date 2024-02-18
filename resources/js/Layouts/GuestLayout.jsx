@@ -7,7 +7,7 @@ export default function Guest({ children }) {
         <div className="min-vh-100 d-flex flex-column justify-content-center align-items-center pt-6 pt-sm-0 bg-primary">
             <div>
                 <Link href="/">
-                    
+                    Hmmmm
                 </Link>
             </div>
 
