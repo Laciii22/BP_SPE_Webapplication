@@ -24,16 +24,16 @@ function MainContent() {
             <div className='min-vh-100 text-left bg-light fs-4 d-flex align-items-center h-100 flex-grow-1' id='spe'>
                 <Container className='py-5'>
                     <Row className='justify-content-center'>
-                    <Col md={5} className='text-justify mb-3 mb-md-3'>
+                    <Col lg={5} className='text-justify mb-3 mb-md-3'>
                             Single Pair Ethernet je komunikačný a prenosový štandard, ktorý umožňuje prenos dát prostredníctvom jediného páru medených vodičov.
                             Tento pár vodičov môže byť kategórie 5e, 6 alebo 6A, čo znamená, že gigabitový Single Pair Ethernet (SPE) využíva existujúcu inštalovanú infraštruktúru Ethernetu.
                             Rozvoj tohto štandardu umožňuje prenos dát na rýchlostiach až do 1 Gbps, čo ho robí vhodným pre mnoho moderných aplikácií.
                         </Col>
-                        <Col md={1}></Col>
-                        <Col md={6} >
-                            <h1 className='text-center mb-3'>Výhody SPE</h1>
+                        <Col lg={1}></Col>
+                        <Col lg={6} >
+                            <h1 className='text-center mb-3 '>Výhody SPE</h1>
                             <Tab.Container id="list-group-tabs-example" defaultActiveKey="#reduction" >
-                                <Row>
+                                <Row className='custom-font-size'>
                                     <Col md={5} className='mb-3 mb-md-0'>
                                         <ListGroup>
                                             <ListGroup.Item action href="#reduction" onClick={handleItemClick}>
