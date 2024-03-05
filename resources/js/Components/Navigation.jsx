@@ -13,8 +13,6 @@ function Navigation() {
     handleScroll(target);
   };
 
-
-
   return (
     <>
       <Navbar expand="md" bg="primary" variant="dark" fixed="top">
@@ -27,7 +25,7 @@ function Navigation() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              {page.url !== '/profile' && (
+              {page.url !== '/profile' && page.url !== '/videos' && (
                 <>
                   <Nav.Link onClick={() => scrollTo('spe')}>
                     O SPE
@@ -54,6 +52,11 @@ function Navigation() {
             <Nav className="justify-content-end ">
               {auth.user ? ( // Podmienené zobrazenie pre prihláseného používateľa
                 <>
+                  {auth.user.admin && (
+                    <Nav.Link className="text-light fw-bold pe-none">
+                      REŽIM ADMINISTRÁTORA
+                    </Nav.Link>
+                  )}
                   <Nav.Link as={Link} href={route('profile.edit')}>
                     Profil
                   </Nav.Link>
