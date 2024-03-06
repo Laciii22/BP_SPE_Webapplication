@@ -11,33 +11,6 @@ export default function Videos() {
         fetchVideos();
     }, []);
 
-    const extractVideoId = (link) => {
-        if (!link || typeof link !== 'string') {
-            return '';
-        }
-        let videoId;
-        if (link.includes('youtube.com')) {
-            // Ak je to odkaz na youtube.com
-            const videoIdIndex = link.indexOf('v=');
-            if (videoIdIndex === -1) {
-                return '';
-            }
-            videoId = link.substring(videoIdIndex + 2);
-        } else if (link.includes('youtu.be')) {
-            // Ak je to skrátený odkaz z youtu.be
-            const lastIndex = link.lastIndexOf('/');
-            videoId = link.substring(lastIndex + 1);
-        } else {
-            // Neznámy formát odkazu
-            return '';
-        }
-        const ampersandPosition = videoId.indexOf('&');
-        if (ampersandPosition !== -1) {
-            videoId = videoId.substring(0, ampersandPosition);
-        }
-        return videoId;
-    };
-
     const fetchVideos = async () => {
         try {
             const response = await fetch('/api/videos');
@@ -47,7 +20,7 @@ export default function Videos() {
             const data = await response.json();
             const processedVideos = data.map((video) => ({
                 id: video.id,
-                videoId: extractVideoId(video.link),
+                videoId: video.link,
                 name: video.name
             }));
             setVideos(processedVideos);

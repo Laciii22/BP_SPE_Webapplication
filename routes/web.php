@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\VideoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/videos', function () {
     return Inertia::render('Videos');
 })->name('videos');
+
+Route::post('/videos', [VideoController::class, 'store'])->name('videos');
 
 
 

@@ -25,7 +25,7 @@ class Video extends Model
      *
      * @var array
      */
-    protected $fillable = ['link', 'nazov_videa']; 
+    protected $fillable = ['link', 'name']; 
 
     /**
      * Ďalšie atribúty modelu...
