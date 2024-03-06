@@ -50,13 +50,8 @@ function Navigation() {
               )}
             </Nav>
             <Nav className="justify-content-end ">
-              {auth.user ? ( // Podmienené zobrazenie pre prihláseného používateľa
+              {auth.user ? ( 
                 <>
-                  {auth.user.admin && (
-                    <Nav.Link className="text-light fw-bold pe-none">
-                      REŽIM ADMINISTRÁTORA
-                    </Nav.Link>
-                  )}
                   <Nav.Link as={Link} href={route('profile.edit')}>
                     Profil
                   </Nav.Link>
@@ -65,6 +60,12 @@ function Navigation() {
                       Odhlásenie
                     </Link>
                   </Nav.Link>
+                  {auth.user && auth.user.admin === 1 && (
+                    <Nav.Link className="text-dark fw-bold pe-none">
+                      REŽIM ADMINISTRÁTORA
+                    </Nav.Link>
+                  )}
+
                 </>
               ) : (
                 <>
