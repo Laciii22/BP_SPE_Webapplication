@@ -22,3 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/videos', [VideoController::class, 'index']);
 
+Route::delete('/videos/{video}', [VideoController::class, 'destroy'])->name('videos.destroy');
+
+

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+
 
 class VideoController extends Controller
 {
@@ -33,23 +35,43 @@ class VideoController extends Controller
 
     public function store(Request $request)
     {
-        // Validace dat z formuláře
+        // Validácia dát z formulára
         $request->validate([
             'link' => 'required|url',
             'name' => 'string|max:255',
         ]);
-
-        // Vytvoření nového záznamu v databázi
+    
+        // Vytvorenie nového záznamu v databáze
         $video = Video::create([
             'link' => $request->link,
             'name' => $request->name,
         ]);
-
-        return;
-
-        // Výpis vytvořeného záznamu pro ověření
-        //dd($video);
+    
+        // Návratová odpoveď pre Inertia.js
+        return Redirect::back()->with('success', 'Video bolo úspešne uložené!');
     }
 
+    public function destroy(Video $video)
+    {
+        $video->delete();
+    }
 
+public function update(Request $request, Video $video)
+{
+    // Validácia dát z formulára
+    $request->validate([
+        'link' => 'required|url',
+        'name' => 'string|max:255',
+    ]);
+
+    // Aktualizácia existujúceho záznamu v databáze
+    $video->update([
+        'link' => $request->link,
+        'name' => $request->name,
+    ]);
+
+    return Redirect::back()->with('success', 'Video bolo úspešne upravené!');
+}
+
+    
 }

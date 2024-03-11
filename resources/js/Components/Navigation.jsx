@@ -62,7 +62,7 @@ function Navigation() {
                   </Nav.Link>
                   {auth.user && auth.user.admin === 1 && (
                     <Nav.Link className="text-dark fw-bold pe-none">
-                      REŽIM ADMINISTRÁTORA
+                      ADMIN
                     </Nav.Link>
                   )}
 

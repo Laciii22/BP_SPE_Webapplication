@@ -1,22 +1,38 @@
-import { useForm, usePage } from '@inertiajs/react';
-import React, { useState, useEffect } from 'react';
-import { Button, Container, Row, Col, Card, Form } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Button, Container, Row, Col, Card, Form, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navigation from '@/Components/Navigation';
 import YoutubePlayer from '@/Components/YoutubePlayer';
+import Notification from '@/Components/CustomNotification'; // Import komponenty Notification
+import { usePage, useForm } from '@inertiajs/react';
+import { Inertia } from '@inertiajs/inertia';
+
 
 export default function Videos() {
-    const [videos, setVideos] = useState([]);
-    const [showForm, setShowForm] = useState(false);
+    const [videos, setVideos] = useState(() => {
+        const storedVideos = sessionStorage.getItem('videos');
+        return storedVideos ? JSON.parse(storedVideos) : [];
+    });
     const { auth } = usePage().props;
+    const [deleteSuccess, setDeleteSuccess] = useState(false); // State pre sledovanie úspešného vymazania
     const { data, setData, post, reset } = useForm({
         link: '',
         name: '',
     });
+    const [editData, setEditData] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         fetchVideos();
     }, []);
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setEditData(null);
+        reset('link', 'name');
+    };
+
+    const handleShowModal = () => setShowModal(true);
 
     const fetchVideos = async () => {
         try {
@@ -31,6 +47,7 @@ export default function Videos() {
                 name: video.name
             }));
             setVideos(processedVideos);
+            sessionStorage.setItem('videos', JSON.stringify(processedVideos));
         } catch (error) {
             console.error(error);
         }
@@ -39,13 +56,36 @@ export default function Videos() {
     const submit = async (e) => {
         e.preventDefault();
         try {
-            await post('/videos');
+            if (editData) {
+                await Inertia.patch(`/videos/${editData.id}`, data);
+            } else {
+                await post('/videos');
+            }
             fetchVideos();
-            setShowForm(false);
-            reset('link', 'name');
+            handleCloseModal();
         } catch (error) {
             console.error(error);
         }
+    };
+
+
+    const deleteVideo = async (id) => {
+        try {
+            await fetch(`/api/videos/${id}`, {
+                method: 'DELETE',
+            });
+            fetchVideos();
+            setDeleteSuccess(true);
+        } catch (error) {
+            console.error(error);
+            alert('Error deleting video');
+        }
+    };
+
+    const handleEdit = (video) => {
+        setEditData(video);
+        setData({ 'link': video.videoId, 'name': video.name });
+        handleShowModal();
     };
 
     return (
@@ -53,37 +93,44 @@ export default function Videos() {
             <header>
                 <Navigation className='navbar' />
             </header>
+            <Notification show={deleteSuccess} onClose={() => setDeleteSuccess(false)} variant="success" message="Video was successfully deleted." />
+
             {auth.user && auth.user.admin && (
-                <Container fluid className="mt-5 mb-3">
-                    <Button variant="dark w-100 mt-3" onClick={() => setShowForm(prevState => !prevState)}>
-                        {showForm ? "Skryť formulár" : "Pridať video"}
+                <Container fluid className="mt-5 d-flex justify-content-center align-items-center">
+                    <Button variant="dark mt-3 w-100" onClick={handleShowModal}>
+                        Pridať video
                     </Button>
 
-                    {showForm && (
-                        <Form onSubmit={submit} className='pt-3'>
-                            <Form.Group className="mb-3" controlId="formLink">
-                                <Form.Label>Link</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Vlož link YouTube videa"
-                                    value={data.link}
-                                    onChange={(e) => setData('link', e.target.value)}
-                                />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="formName">
-                                <Form.Label>Názov</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Zadaj názov videa"
-                                    value={data.name}
-                                    onChange={(e) => setData('name', e.target.value)}
-                                />
-                            </Form.Group>
-                            <Button variant="danger w-100" type="submit">
-                                Potvrdiť
-                            </Button>
-                        </Form>
-                    )}
+                    <Modal show={showModal} onHide={handleCloseModal} centered>
+                        <Modal.Header closeButton>
+                            <Modal.Title>{editData ? "Upraviť video" : "Pridať video"}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form onSubmit={submit}>
+                                <Form.Group controlId="formLink">
+                                    <Form.Label>Link</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Vlož link YouTube videa"
+                                        value={data.link}
+                                        onChange={(e) => setData('link', e.target.value)}
+                                    />
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="formName">
+                                    <Form.Label>Názov</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Zadaj názov videa"
+                                        value={data.name}
+                                        onChange={(e) => setData('name', e.target.value)}
+                                    />
+                                </Form.Group>
+                                <Button variant="danger" type="submit">
+                                    {editData ? "Uložiť zmeny" : "Potvrdiť"}
+                                </Button>
+                            </Form>
+                        </Modal.Body>
+                    </Modal>
                 </Container>
             )}
 
@@ -97,6 +144,12 @@ export default function Videos() {
                                 </Card.Body>
                                 <Card.Footer>
                                     <h3 className='text-center'>{video.name}</h3>
+                                    {auth.user && auth.user.admin && (
+                                        <div className='d-flex'>
+                                            <Button className='w-50 mx-1' variant="warning" onClick={() => handleEdit(video)}>Edit</Button>
+                                            <Button className='w-50 mx-1' variant="dark" onClick={() => deleteVideo(video.id)}>Delete</Button>
+                                        </div>
+                                    )}
                                 </Card.Footer>
                             </Card>
                         </Col>
@@ -106,4 +159,3 @@ export default function Videos() {
         </div>
     );
 }
-

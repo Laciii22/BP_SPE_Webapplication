@@ -39,7 +39,15 @@ Route::get('/videos', function () {
     return Inertia::render('Videos');
 })->name('videos');
 
-Route::post('/videos', [VideoController::class, 'store'])->name('videos');
+
+Route::post('/videos', [VideoController::class, 'store'])->name('videos.store');
+Route::patch('/videos/{video}', [VideoController::class, 'update'])->name('videos.update'); 
+
+
+Route::get('/quiz', function () {
+    return Inertia::render('Quiz');
+})->name('quiz');
+
 
 
 
