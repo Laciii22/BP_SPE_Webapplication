@@ -5,6 +5,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\QuestionController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +49,9 @@ Route::patch('/videos/{video}', [VideoController::class, 'update'])->name('video
 Route::get('/quiz', function () {
     return Inertia::render('Quiz');
 })->name('quiz');
+
+
+
 
 
 

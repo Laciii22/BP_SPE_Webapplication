@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\QuestionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
@@ -24,4 +25,5 @@ Route::get('/videos', [VideoController::class, 'index']);
 
 Route::delete('/videos/{video}', [VideoController::class, 'destroy'])->name('videos.destroy');
 
+Route::get('/quiz', [QuestionController::class, 'index']);
 

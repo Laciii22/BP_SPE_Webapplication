@@ -96,7 +96,7 @@ export default function Videos() {
             <Notification show={deleteSuccess} onClose={() => setDeleteSuccess(false)} variant="success" message="Video was successfully deleted." />
 
             {auth.user && auth.user.admin && (
-                <Container fluid className="mt-5 d-flex justify-content-center align-items-center">
+                <Container fluid className="mt-5 d-flex justify-content-center align-items-center" >
                     <Button variant="dark mt-3 w-100" onClick={handleShowModal}>
                         Pridať video
                     </Button>
@@ -134,7 +134,7 @@ export default function Videos() {
                 </Container>
             )}
 
-            <Container fluid className=" mb-3">
+            <Container fluid className=" mb-3 " style={{ marginTop: '5rem' }}>
                 <Row xs={1} sm={1} md={2} lg={2} xl={2} className="g-4 mt-1">
                     {videos.map((video) => (
                         <Col key={video.id}>

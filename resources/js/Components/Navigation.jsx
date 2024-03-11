@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, usePage } from '@inertiajs/react';
 import { handleScroll } from '@/Utilities/scrollFunction';
 
-
 function Navigation() {
   const { auth } = usePage().props; // Získanie údajov o autentifikácii z kontextu stránky
   const page = usePage(); // Získanie údajov o aktuálnej stránke
@@ -25,7 +24,7 @@ function Navigation() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              {page.url !== '/profile' && page.url !== '/videos' && (
+              {page.url !== '/profile' && page.url !== '/videos' && page.url !== '/quiz' && (
                 <>
                   <Nav.Link onClick={() => scrollTo('spe')}>
                     O SPE
@@ -45,12 +44,12 @@ function Navigation() {
                     </NavDropdown.Item>
                   </NavDropdown>
                   <Nav.Link as={Link} href={route('videos')}>Videá</Nav.Link>
-
+                  <Nav.Link as={Link} href={auth.user ? route('quiz') : route('login')}>Otestuj sa!</Nav.Link>
                 </>
               )}
             </Nav>
             <Nav className="justify-content-end ">
-              {auth.user ? ( 
+              {auth.user ? (
                 <>
                   <Nav.Link as={Link} href={route('profile.edit')}>
                     Profil
@@ -65,11 +64,10 @@ function Navigation() {
                       ADMIN
                     </Nav.Link>
                   )}
-
                 </>
               ) : (
                 <>
-                  {page.url.pathname !== '/profile' && ( // Kontrola, zda URL není '/profile'
+                  {page.url.pathname !== '/profile' && ( 
                     <>
                       <Nav.Link as={Link} href={route('login')}>
                         Prihlásenie
