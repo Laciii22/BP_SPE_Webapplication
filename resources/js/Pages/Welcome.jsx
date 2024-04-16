@@ -6,6 +6,7 @@ import backgroundImage from '../images/background-spe2.jpg';
 import ParallaxImage from '@/Components/ParallaxImage';
 import MainContent from '@/Components/MainContent';
 import { handleScroll } from '@/Utilities/scrollFunction';
+import Footer from '@/Components/Footer';
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     return (
@@ -42,6 +43,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                     </Row>
                                 </ParallaxImage>
                                 <MainContent></MainContent>
+                                <Footer></Footer>
 
                             </div>
                         </div>

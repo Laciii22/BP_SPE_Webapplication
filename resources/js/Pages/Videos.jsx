@@ -6,6 +6,7 @@ import YoutubePlayer from '@/Components/YoutubePlayer';
 import Notification from '@/Components/CustomNotification'; // Import komponenty Notification
 import { usePage, useForm } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
+import Footer from '@/Components/Footer';
 
 
 export default function Videos() {
@@ -144,10 +145,10 @@ export default function Videos() {
                                 </Card.Body>
                                 <Card.Footer>
                                     <h3 className='text-center'>{video.name}</h3>
-                                    {auth.user && auth.user.admin && (
+                                    {auth.user && auth.user.admin === 1 &&  (
                                         <div className='d-flex'>
-                                            <Button className='w-50 mx-1' variant="warning" onClick={() => handleEdit(video)}>Edit</Button>
-                                            <Button className='w-50 mx-1' variant="dark" onClick={() => deleteVideo(video.id)}>Delete</Button>
+                                            <Button className='w-50 mx-1' variant="warning" onClick={() => handleEdit(video)}>Upraviť</Button>
+                                            <Button className='w-50 mx-1' variant="dark" onClick={() => deleteVideo(video.id)}>Vymazať</Button>
                                         </div>
                                     )}
                                 </Card.Footer>
@@ -156,6 +157,7 @@ export default function Videos() {
                     ))}
                 </Row>
             </Container>
+            <Footer></Footer>
         </div>
     );
 }

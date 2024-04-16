@@ -4,6 +4,7 @@ import carImage from '../images/car.png';
 import tshortImage from '../images/10baset1s.jpeg';
 import aplImage from '../images/apl.png';
 import { Col, Row, Container, Tab, ListGroup, Image, Modal } from 'react-bootstrap';
+import Footer from './Footer';
 function MainContent() {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState('');
@@ -325,6 +326,7 @@ function MainContent() {
                 </Modal>
 
             </div>
+
         </div>
 
 

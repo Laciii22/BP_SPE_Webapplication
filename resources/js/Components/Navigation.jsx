@@ -14,7 +14,7 @@ function Navigation() {
 
   return (
     <>
-      <Navbar expand="md" bg="primary" variant="dark" fixed="top">
+      <Navbar expand="lg" bg="primary" variant="dark" fixed="top">
         <Container>
           <Link href="/" style={{ textDecoration: 'none' }}>
             <Navbar.Brand style={{ cursor: 'pointer' }}>

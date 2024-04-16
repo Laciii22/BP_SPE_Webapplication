@@ -26,4 +26,6 @@ Route::get('/videos', [VideoController::class, 'index']);
 Route::delete('/videos/{video}', [VideoController::class, 'destroy'])->name('videos.destroy');
 
 Route::get('/quiz', [QuestionController::class, 'index']);
+Route::delete('/quiz/{question}', [QuestionController::class, 'destroy'])->name('quiz.destroy');
 
+Route::post('/quiz', [QuestionController::class, 'store'])->name('quiz.store');
