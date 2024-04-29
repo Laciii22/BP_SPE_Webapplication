@@ -213,7 +213,7 @@ function MainContent() {
 
 
                         <Col md={6} className='fs-5 bg-light text-dark border-radius rounded pb-3 flex-fill'>
-                            <h2 className='text-center mb-3'>Výhody SPE</h2>
+                            <h2 className='text-center mb-3'>Výhody 10Base-T1S</h2>
                             <Tab.Container id="list-group-tabs-example" defaultActiveKey="#reduction" >
                                 <Row>
                                     <Col md={5} className='mb-3 mb-md-0'>
@@ -291,8 +291,8 @@ function MainContent() {
                         <Col md={6}>
                             <p>
                                 Tento štandard má podobné vlastnosti ako štandard T1S, s tým rozdielom , že má
-                                dosah až do 1 kilometra a používa sa viac v industriálnom priemysle ako a nie
-                                v automobilovom. Na rozdiel od TS1 používa kódovanie PAM3 a nie Manchester, taktiež nieje multidrop ale point to point, ako aj ostatné SPE.
+                                dosah až do 1 kilometra a používa sa viac v procesnej automatizácií ako
+                                v automobilovom priemysle. Na rozdiel od TS1 používa kódovanie PAM3 a nie Manchester, taktiež nieje multidrop ale point to point, ako aj ostatné SPE.
                             </p>
                             <h3>Advance Physical Layer</h3>
                             <p>Vznikla ako odvodenina zo štandardu 10BASE-T1L</p>

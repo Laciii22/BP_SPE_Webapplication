@@ -35,25 +35,28 @@ export default function Videos() {
 
     const handleShowModal = () => setShowModal(true);
 
-    const fetchVideos = async () => {
-        try {
-            const response = await fetch('/api/videos');
-            if (!response.ok) {
-                throw new Error('Failed to fetch videos');
-            }
-            const data = await response.json();
-            const processedVideos = data.map((video) => ({
-                id: video.id,
-                videoId: video.link,
-                name: video.name
-            }));
-            setVideos(processedVideos);
-            sessionStorage.setItem('videos', JSON.stringify(processedVideos));
-        } catch (error) {
-            console.error(error);
-        }
+    const fetchVideos = () => {
+        fetch('/api/videos')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch videos');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const processedVideos = data.map(video => ({
+                    id: video.id,
+                    videoId: video.link,
+                    name: video.name
+                }));
+                setVideos(processedVideos);
+                sessionStorage.setItem('videos', JSON.stringify(processedVideos));
+            })
+            .catch(error => {
+                console.error(error);
+            });
     };
-
+    
     const submit = async (e) => {
         e.preventDefault();
         try {

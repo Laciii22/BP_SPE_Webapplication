@@ -4,6 +4,7 @@ import Question from '@/Components/Question';
 import Navigation from '@/Components/Navigation';
 import { usePage } from '@inertiajs/react';
 import Footer from '@/Components/Footer';
+import AddNewQuestion from '@/Components/AddNewQuestion';
 
 const Quiz = () => {
     const [questions, setQuestions] = useState([]);
@@ -178,49 +179,24 @@ const Quiz = () => {
                     )}
                 </div>
 
-                {showModal && (
-                    <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Pridať otázku (zaškrtni správnu odpoveď)</h5>
-                                    <button type="button" className="btn-close" onClick={handleModalClose}></button>
-                                </div>
-                                <div className="modal-body">
-                                    <input type="text" className="form-control mb-3" placeholder="Zadaj otázku" value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
-
-                                    {answers.map((answer, index) => (
-                                        <div key={index} className="form-check">
-                                            <input
-                                                type="radio"
-                                                className="form-check-input"
-                                                name="correctAnswer"
-                                                checked={index === correctAnswerIndex}
-                                                onChange={() => setCorrectAnswerIndex(index)}
-                                            />
-                                            <input
-                                                type="text"
-                                                className="form-control mb-3"
-                                                placeholder={`Zadaj odpoveď ${index + 1}`}
-                                                value={answer || ''}
-                                                onChange={(e) => setAnswers(prevAnswers => [...prevAnswers.slice(0, index), e.target.value, ...prevAnswers.slice(index + 1)])}
-                                            />
-                                        </div>
-                                    ))}
-
-                                    <button className="btn btn-secondary me-1" onClick={addNewAnswer}>Pridať ďaľšiu odpoveď</button>
-
-                                    <button className="btn btn-primary" onClick={handleNewQuestionSubmit} disabled={!areAtLeastTwoAnswersFilled() || correctAnswerIndex === null}>Potvrdiť</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
+                <AddNewQuestion
+                    showModal={showModal}
+                    handleModalClose={handleModalClose}
+                    handleNewQuestionSubmit={handleNewQuestionSubmit}
+                    newQuestion={newQuestion}
+                    setNewQuestion={setNewQuestion}
+                    correctAnswerIndex={correctAnswerIndex}
+                    setCorrectAnswerIndex={setCorrectAnswerIndex}
+                    answers={answers}
+                    setAnswers={setAnswers}
+                    areAtLeastTwoAnswersFilled={areAtLeastTwoAnswersFilled}
+                    addNewAnswer={addNewAnswer}
+                />
             </div>
             <Footer></Footer>
         </div>
     );
 };
+
 
 export default Quiz;
