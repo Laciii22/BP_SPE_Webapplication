@@ -11,7 +11,7 @@ const CustomNotification = ({ show, onClose, variant, message }) => {
             const timer = setTimeout(() => {
                 setIsVisible(false);
                 onClose(); // Zavrie upozornenie po skončení časovača
-            }, 5000); // 5000 ms = 5 sekúnd
+            }, 5000); 
 
             return () => clearTimeout(timer); // Zrušíme časovač pri odmontovaní komponentu
         }

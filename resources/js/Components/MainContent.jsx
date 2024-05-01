@@ -4,13 +4,12 @@ import carImage from '../images/car.png';
 import tshortImage from '../images/10baset1s.jpeg';
 import aplImage from '../images/apl.png';
 import { Col, Row, Container, Tab, ListGroup, Image, Modal } from 'react-bootstrap';
-import Footer from './Footer';
 function MainContent() {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState('');
 
     const handleItemClick = (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
     };
 
     const handleImageClick = (image) => {
@@ -25,7 +24,7 @@ function MainContent() {
             <div className='min-vh-100 text-left bg-light fs-4 d-flex align-items-center h-100 flex-grow-1' id='spe'>
                 <Container className='py-5'>
                     <Row className='justify-content-center'>
-                    <Col lg={5} className='text-justify mb-3 mb-md-3'>
+                        <Col lg={5} className='text-justify mb-3 mb-md-3'>
                             Single Pair Ethernet je komunikačný a prenosový štandard, ktorý umožňuje prenos dát prostredníctvom jediného páru medených vodičov.
                             Tento pár vodičov môže byť kategórie 5e, 6 alebo 6A, čo znamená, že gigabitový Single Pair Ethernet (SPE) využíva existujúcu inštalovanú infraštruktúru Ethernetu.
                             Rozvoj tohto štandardu umožňuje prenos dát na rýchlostiach až do 1 Gbps, čo ho robí vhodným pre mnoho moderných aplikácií.
@@ -73,13 +72,17 @@ function MainContent() {
                                 </Row>
                             </Tab.Container>
                         </Col>
-                        <Image className='image spe-image' src={speImage} fluid onClick={() => handleImageClick(speImage)}></Image>
+                        <Image className='image spe-image' src={speImage} fluid onClick={() => handleImageClick(speImage)} />
 
-                        <Modal show={showModal} onHide={handleCloseModal} centered>
+                        <Modal show={showModal} onHide={handleCloseModal} centered size="lg">
                             <Modal.Body>
-                                <Image src={selectedImage} fluid />
+                                <div className="modal-image-container">
+                                    <Image src={selectedImage} className="modal-image" fluid />
+                                </div>
                             </Modal.Body>
                         </Modal>
+
+
 
 
                     </Row>
@@ -167,11 +170,6 @@ function MainContent() {
 
                 </Container>
 
-                <Modal show={showModal} onHide={handleCloseModal} centered>
-                    <Modal.Body>
-                        <Image src={selectedImage} fluid />
-                    </Modal.Body>
-                </Modal>
 
             </div>
 
@@ -205,11 +203,6 @@ function MainContent() {
                         </Col>
 
 
-                        <Modal show={showModal} onHide={handleCloseModal} centered>
-                            <Modal.Body>
-                                <Image src={selectedImage} fluid />
-                            </Modal.Body>
-                        </Modal>
 
 
                         <Col md={6} className='fs-5 bg-light text-dark border-radius rounded pb-3 flex-fill'>
@@ -319,11 +312,7 @@ function MainContent() {
 
                 </Container>
 
-                <Modal show={showModal} onHide={handleCloseModal} centered>
-                    <Modal.Body>
-                        <Image src={selectedImage} fluid />
-                    </Modal.Body>
-                </Modal>
+
 
             </div>
 

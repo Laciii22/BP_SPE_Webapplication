@@ -155,8 +155,8 @@ const Quiz = () => {
                         />
                         {auth.user && auth.user.admin === 1 && (
                             <div className='d-flex'>
-                                <button className="btn btn-dark ms-1 w-100" onClick={() => handleDeleteQuestion(question.id)}>
-                                    Vymazať
+                                <button className="btn btn-danger ms-1 w-100" onClick={() => handleDeleteQuestion(question.id)}>
+                                    Vymazať otázku
                                 </button>
                             </div>
                         )}
