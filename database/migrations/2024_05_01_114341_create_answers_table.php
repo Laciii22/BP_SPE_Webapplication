@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateYoutubeLinksTable extends Migration
+class CreateAnswersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateYoutubeLinksTable extends Migration
      */
     public function up()
     {
-        Schema::create('youtube_links', function (Blueprint $table) {
+        Schema::create('answers', function (Blueprint $table) {
             $table->id();
-            $table->string('link');
-            $table->string('name')->nullable();
-            // Môžeš pridať ďalšie stľpce podľa potreby
+            $table->unsignedBigInteger('question_id');
+            $table->text('content');
+            $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
         });
     }
 
@@ -28,6 +28,6 @@ class CreateYoutubeLinksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('youtube_links');
+        Schema::dropIfExists('answers');
     }
 }
