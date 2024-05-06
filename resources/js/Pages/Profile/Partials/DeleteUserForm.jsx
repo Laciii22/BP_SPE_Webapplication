@@ -48,7 +48,7 @@ export default function DeleteUserForm({ className = '' }) {
     return (
         <section className={`space-y-6 ${className}`}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">Delete Account</h2>
+                <h2 className="text-lg font-medium text-gray-900">Vymazať účet</h2>
 
                 <p className="mt-1 text-sm text-gray-600">
                     Po vymazaní vášho účtu budú všetky jeho zdroje a dáta trvalo odstránené. Pred vymazaním účtu si prosím stiahnite všetky údaje alebo informácie, ktoré chcete zachovať.
@@ -64,7 +64,7 @@ export default function DeleteUserForm({ className = '' }) {
                     </h2>
 
                     <p className="mt-1 text-sm text-gray-600">
-                        Pokiaľ je váš účet vymazaný, všetky jeho zdroje a dáta budú trvalo odstránené. Prosím, zadajte svoje heslo na potvrdenie, že chcete svoj účet trvalo vymazať.
+                        Pokiaľ je váš účet vymazaný, všetky dáta budú trvalo odstránené. Prosím, zadajte svoje heslo na potvrdenie, že chcete svoj účet trvalo vymazať.
                     </p>
 
                     <div className="mt-6">

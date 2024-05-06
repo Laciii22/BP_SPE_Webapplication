@@ -5,6 +5,8 @@ import Navigation from '@/Components/Navigation';
 import { usePage } from '@inertiajs/react';
 import Footer from '@/Components/Footer';
 import AddNewQuestion from '@/Components/AddNewQuestion';
+import ConfirmationModal from '@/Components/ConfirmationModal';
+import Notification from '@/Components/CustomNotification';
 
 const Quiz = () => {
     const [questions, setQuestions] = useState([]);
@@ -13,9 +15,15 @@ const Quiz = () => {
     const [wrongAnswerIndices, setWrongAnswerIndices] = useState([]);
     const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
     const { auth } = usePage().props;
-    const [showModal, setShowModal] = useState(false);
     const [newQuestion, setNewQuestion] = useState('');
     const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
+    const [selectedQuestionId, setSelectedQuestionId] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [deleteSuccess, setDeleteSuccess] = useState(false); 
+
+
+
 
     const fetchQuestions = async () => {
         try {
@@ -50,7 +58,18 @@ const Quiz = () => {
         return shuffledArray;
     };
 
-    
+
+    const confirmDeleteQuestion = async () => {
+        await fetch(`api/quiz/${selectedQuestionId}`, {
+            method: 'DELETE',
+        });
+        fetchQuestions();
+        setShowModal(false); 
+        setSelectedQuestionId(null); 
+        setDeleteSuccess(true);
+
+    };
+
 
     const handleAnswerChange = (questionIndex, answerId) => {
         setAnswers(prevAnswers => {
@@ -76,12 +95,7 @@ const Quiz = () => {
         setScore(questions.filter((question, index) => question.answers.find(answer => answer.id === answers[index]).correct_answer).length);
     };
 
-    const handleDeleteQuestion = async (questionId) => {
-        await fetch(`api/quiz/${questionId}`, {
-            method: 'DELETE',
-        });
-        fetchQuestions();
-    };
+
 
     const handleModalClose = () => {
         setShowModal(false);
@@ -130,7 +144,7 @@ const Quiz = () => {
         setAnswers(['', '']);
         setShowModal(true);
     };
-    
+
 
     const areAtLeastTwoAnswersFilled = () => {
         const filledAnswersCount = answers.filter(answer => typeof answer === 'string' && answer.trim() !== '').length;
@@ -155,13 +169,28 @@ const Quiz = () => {
                         />
                         {auth.user && auth.user.admin === 1 && (
                             <div className='d-flex'>
-                                <button className="btn btn-danger ms-1 w-100" onClick={() => handleDeleteQuestion(question.id)}>
+                                <button className="btn btn-danger ms-1 w-100" onClick={() => { setShowConfirmationModal(true); setSelectedQuestionId(question.id); }}>
                                     Vymazať otázku
                                 </button>
+
+
+
                             </div>
                         )}
                     </div>
                 ))}
+
+                <Notification show={deleteSuccess} onClose={() => setDeleteSuccess(false)} variant="success" message="Otázka bola úspešne vymazaná" />
+
+
+                {/* Confirmation Modal */}
+                <ConfirmationModal
+                    show={showConfirmationModal}
+                    handleClose={() => setShowConfirmationModal(false)} // Close modal when user cancels
+                    handleConfirm={confirmDeleteQuestion} // Call delete function when user confirms
+                    message="Ste si istý že chcete vymazať túto otázku?"
+                />
+
 
                 <div className='d-flex align-items-center'>
                     <button

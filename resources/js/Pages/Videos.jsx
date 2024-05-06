@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Container, Row, Col, Card, Form, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navigation from '@/Components/Navigation';
 import YoutubePlayer from '@/Components/YoutubePlayer';
-import Notification from '@/Components/CustomNotification'; // Import komponenty Notification
+import Notification from '@/Components/CustomNotification'; 
 import { usePage, useForm } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
 import Footer from '@/Components/Footer';
-
+import ConfirmationModal from '@/Components/ConfirmationModal'; 
 
 export default function Videos() {
     const [videos, setVideos] = useState(() => {
@@ -15,13 +15,15 @@ export default function Videos() {
         return storedVideos ? JSON.parse(storedVideos) : [];
     });
     const { auth } = usePage().props;
-    const [deleteSuccess, setDeleteSuccess] = useState(false); // State pre sledovanie úspešného vymazania
+    const [deleteSuccess, setDeleteSuccess] = useState(false); 
     const { data, setData, post, reset } = useForm({
         link: '',
         name: '',
     });
     const [editData, setEditData] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [selectedVideoId, setSelectedVideoId] = useState(null); // Track selected video ID for deletion
+    const [showDeleteModal, setShowDeleteModal] = useState(false); // State to control the delete confirmation modal
 
     useEffect(() => {
         fetchVideos();
@@ -34,6 +36,13 @@ export default function Videos() {
     };
 
     const handleShowModal = () => setShowModal(true);
+
+    const handleDeleteModalClose = () => setShowDeleteModal(false);
+
+    const handleDeleteModalConfirm = async () => {
+        await deleteVideo(selectedVideoId);
+        setShowDeleteModal(false); // Close delete confirmation modal after deletion
+    };
 
     const fetchVideos = () => {
         fetch('/api/videos')
@@ -72,7 +81,6 @@ export default function Videos() {
         }
     };
 
-
     const deleteVideo = async (id) => {
         try {
             await fetch(`/api/videos/${id}`, {
@@ -90,6 +98,11 @@ export default function Videos() {
         setEditData(video);
         setData({ 'link': video.videoId, 'name': video.name });
         handleShowModal();
+    };
+
+    const handleDelete = (videoId) => {
+        setSelectedVideoId(videoId); // Set the selected video ID for deletion
+        setShowDeleteModal(true); // Open delete confirmation modal
     };
 
     return (
@@ -135,6 +148,14 @@ export default function Videos() {
                             </Form>
                         </Modal.Body>
                     </Modal>
+
+                    {/* Delete Confirmation Modal */}
+                    <ConfirmationModal
+                        show={showDeleteModal}
+                        handleClose={handleDeleteModalClose}
+                        handleConfirm={handleDeleteModalConfirm}
+                        message="Ste si istý, že chcete vymazať toto video?"
+                    />
                 </Container>
             )}
 
@@ -151,7 +172,7 @@ export default function Videos() {
                                     {auth.user && auth.user.admin === 1 &&  (
                                         <div className='d-flex'>
                                             <Button className='w-50 mx-1' variant="warning" onClick={() => handleEdit(video)}>Upraviť</Button>
-                                            <Button className='w-50 mx-1' variant="dark" onClick={() => deleteVideo(video.id)}>Vymazať</Button>
+                                            <Button className='w-50 mx-1' variant="dark" onClick={() => handleDelete(video.id)}>Vymazať</Button>
                                         </div>
                                     )}
                                 </Card.Footer>

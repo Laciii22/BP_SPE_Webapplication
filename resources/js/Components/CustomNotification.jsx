@@ -10,22 +10,28 @@ const CustomNotification = ({ show, onClose, variant, message }) => {
         if (show) {
             const timer = setTimeout(() => {
                 setIsVisible(false);
-                onClose(); // Zavrie upozornenie po skončení časovača
-            }, 5000); 
+                onClose();
+            }, 2000);
 
-            return () => clearTimeout(timer); // Zrušíme časovač pri odmontovaní komponentu
+            return () => clearTimeout(timer);
         }
     }, [show, onClose]);
 
     return (
-        <Alert show={isVisible} variant={variant} onClose={onClose} dismissible style={{
-            width: '100%',
-            position: 'absolute',
-            top: '10%',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: '999',
-        }}>
+        <Alert
+            show={isVisible}
+            variant={variant}
+            onClose={onClose}
+            dismissible
+            style={{
+                width: '80%',
+                position: 'fixed', 
+                top: '50%', 
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: '999',
+            }}
+        >
             {message}
         </Alert>
     );

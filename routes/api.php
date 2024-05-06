@@ -4,6 +4,8 @@ use App\Http\Controllers\QuestionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\UserController;
+
 
 
 /*
@@ -29,3 +31,8 @@ Route::get('/quiz', [QuestionController::class, 'index']);
 Route::delete('/quiz/{question}', [QuestionController::class, 'destroy'])->name('quiz.destroy');
 
 Route::post('/quiz', [QuestionController::class, 'store'])->name('quiz.store');
+
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::put('/users/{user}/admin', [UserController::class, 'setAdmin']);
+Route::put('/users/{user}/remove-admin', [UserController::class, 'removeAdmin']);
+

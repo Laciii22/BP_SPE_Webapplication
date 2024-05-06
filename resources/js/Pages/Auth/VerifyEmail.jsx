@@ -13,22 +13,22 @@ export default function VerifyEmail({ status }) {
 
     return (
         <GuestLayout>
-            <Head title="Email Verification" />
+            <Head title="Overenie E-mailu" />
 
             <div className="mb-4 text-sm text-gray-600">
-                Thanks for signing up! Before getting started, could you verify your email address by clicking on the
-                link we just emailed to you? If you didn't receive the email, we will gladly send you another.
+                Ďakujeme, že ste sa zaregistrovali! Pred začatím môžete overiť svoju emailovú adresu kliknutím na odkaz,
+                ktorý sme vám práve poslali emailom. Ak ste nedostali e-mail, radi vám pošleme ďalší.
             </div>
 
             {status === 'verification-link-sent' && (
                 <div className="mb-4 font-medium text-sm text-green-600">
-                    A new verification link has been sent to the email address you provided during registration.
+                    Nový overovací odkaz bol odoslaný na emailovú adresu, ktorú ste poskytli počas registrácie.
                 </div>
             )}
 
             <form onSubmit={submit}>
                 <div className="mt-4 flex items-center justify-between">
-                    <PrimaryButton disabled={processing}>Resend Verification Email</PrimaryButton>
+                    <PrimaryButton disabled={processing}>Zaslať Overovací E-mail</PrimaryButton>
 
                     <Link
                         href={route('logout')}
@@ -36,7 +36,7 @@ export default function VerifyEmail({ status }) {
                         as="button"
                         className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                        Log Out
+                        Odhlásiť sa
                     </Link>
                 </div>
             </form>

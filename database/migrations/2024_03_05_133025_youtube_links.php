@@ -17,7 +17,6 @@ class CreateYoutubeLinksTable extends Migration
             $table->id();
             $table->string('link');
             $table->string('name')->nullable();
-            // Môžeš pridať ďalšie stľpce podľa potreby
         });
     }
 
