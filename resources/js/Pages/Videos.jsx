@@ -5,7 +5,6 @@ import Navigation from '@/Components/Navigation';
 import YoutubePlayer from '@/Components/YoutubePlayer';
 import Notification from '@/Components/CustomNotification'; 
 import { usePage, useForm } from '@inertiajs/react';
-import { Inertia } from '@inertiajs/inertia';
 import Footer from '@/Components/Footer';
 import ConfirmationModal from '@/Components/ConfirmationModal'; 
 
@@ -22,8 +21,8 @@ export default function Videos() {
     });
     const [editData, setEditData] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [selectedVideoId, setSelectedVideoId] = useState(null); // Track selected video ID for deletion
-    const [showDeleteModal, setShowDeleteModal] = useState(false); // State to control the delete confirmation modal
+    const [selectedVideoId, setSelectedVideoId] = useState(null); 
+    const [showDeleteModal, setShowDeleteModal] = useState(false); 
 
     useEffect(() => {
         fetchVideos();
@@ -70,16 +69,38 @@ export default function Videos() {
         e.preventDefault();
         try {
             if (editData) {
-                await Inertia.patch(`/videos/${editData.id}`, data);
+                console.log(editData.id);
+                const response = await fetch(`/api/videos/${editData.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to update video');
+                }
             } else {
-                await post('/videos');
+                const response = await fetch('/api/videos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to create video');
+                }
             }
-            fetchVideos();
             handleCloseModal();
+            fetchVideos();
+
         } catch (error) {
             console.error(error);
         }
     };
+    
+    
 
     const deleteVideo = async (id) => {
         try {
@@ -99,6 +120,7 @@ export default function Videos() {
         setData({ 'link': video.videoId, 'name': video.name });
         handleShowModal();
     };
+    
 
     const handleDelete = (videoId) => {
         setSelectedVideoId(videoId); // Set the selected video ID for deletion

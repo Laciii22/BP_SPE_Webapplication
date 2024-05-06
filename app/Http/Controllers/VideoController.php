@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 
 
 class VideoController extends Controller
@@ -47,8 +46,7 @@ class VideoController extends Controller
             'name' => $request->name,
         ]);
     
-        // Návratová odpoveď pre Inertia.js
-        return Redirect::back()->with('success', 'Video bolo úspešne uložené!');
+        return response()->json($video, 201);
     }
 
     public function destroy(Video $video)
@@ -58,19 +56,17 @@ class VideoController extends Controller
 
 public function update(Request $request, Video $video)
 {
-    // Validácia dát z formulára
     $request->validate([
         'link' => 'required|url',
         'name' => 'string|max:255',
     ]);
 
-    // Aktualizácia existujúceho záznamu v databáze
     $video->update([
         'link' => $request->link,
         'name' => $request->name,
     ]);
 
-    return Redirect::back()->with('success', 'Video bolo úspešne upravené!');
+    return response()->json($video, 200);
 }
 
     

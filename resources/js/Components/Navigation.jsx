@@ -24,7 +24,7 @@ function Navigation() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              {page.url !== '/profile' && page.url !== '/videos' && page.url !== '/quiz' && (
+              {page.url !== '/profile' && page.url !== '/videos' && page.url !== '/quiz' &&  page.url !== '/articles' &&(
                 <>
                   <Nav.Link onClick={() => scrollTo('spe')}>
                     O SPE
@@ -43,6 +43,7 @@ function Navigation() {
                       10BASE-T1L
                     </NavDropdown.Item>
                   </NavDropdown>
+                  <Nav.Link as={Link} href={route('articles')}>Články</Nav.Link>
                   <Nav.Link as={Link} href={route('videos')}>Videá</Nav.Link>
                   <Nav.Link as={Link} href={auth.user ? route('quiz') : route('login')}>Otestuj sa!</Nav.Link>
                 </>

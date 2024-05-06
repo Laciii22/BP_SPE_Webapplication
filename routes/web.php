@@ -38,8 +38,11 @@ Route::get('/videos', function () {
     return Inertia::render('Videos');
 })->name('videos');
 
-Route::post('/videos', [VideoController::class, 'store'])->name('videos.store');
-Route::patch('/videos/{video}', [VideoController::class, 'update'])->name('videos.update');
+Route::get('/articles', function () {
+    return Inertia::render('Articles');
+})->name('articles');
+
+
 
 Route::get('/quiz', function () {
     return Inertia::render('Quiz');
