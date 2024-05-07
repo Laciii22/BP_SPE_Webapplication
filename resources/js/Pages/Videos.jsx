@@ -3,10 +3,10 @@ import { Button, Container, Row, Col, Card, Form, Modal } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navigation from '@/Components/Navigation';
 import YoutubePlayer from '@/Components/YoutubePlayer';
-import Notification from '@/Components/CustomNotification'; 
-import { usePage, useForm } from '@inertiajs/react';
+import CustomNotification from '@/Components/CustomNotification';
+import { usePage, useForm, Head } from '@inertiajs/react';
 import Footer from '@/Components/Footer';
-import ConfirmationModal from '@/Components/ConfirmationModal'; 
+import ConfirmationModal from '@/Components/ConfirmationModal';
 
 export default function Videos() {
     const [videos, setVideos] = useState(() => {
@@ -14,15 +14,21 @@ export default function Videos() {
         return storedVideos ? JSON.parse(storedVideos) : [];
     });
     const { auth } = usePage().props;
-    const [deleteSuccess, setDeleteSuccess] = useState(false); 
+
+    const [notification, setNotification] = useState({
+        show: false,
+        type: '',
+        message: ''
+    });
+
     const { data, setData, post, reset } = useForm({
         link: '',
         name: '',
     });
     const [editData, setEditData] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [selectedVideoId, setSelectedVideoId] = useState(null); 
-    const [showDeleteModal, setShowDeleteModal] = useState(false); 
+    const [selectedVideoId, setSelectedVideoId] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     useEffect(() => {
         fetchVideos();
@@ -38,10 +44,8 @@ export default function Videos() {
 
     const handleDeleteModalClose = () => setShowDeleteModal(false);
 
-    const handleDeleteModalConfirm = async () => {
-        await deleteVideo(selectedVideoId);
-        setShowDeleteModal(false); // Close delete confirmation modal after deletion
-    };
+
+    /* API  */
 
     const fetchVideos = () => {
         fetch('/api/videos')
@@ -64,12 +68,11 @@ export default function Videos() {
                 console.error(error);
             });
     };
-    
+
     const submit = async (e) => {
         e.preventDefault();
         try {
             if (editData) {
-                console.log(editData.id);
                 const response = await fetch(`/api/videos/${editData.id}`, {
                     method: 'PATCH',
                     headers: {
@@ -80,6 +83,11 @@ export default function Videos() {
                 if (!response.ok) {
                     throw new Error('Failed to update video');
                 }
+                setNotification({
+                    show: true,
+                    type: 'success',
+                    message: 'Video bolo úspešne zmenené.'
+                });
             } else {
                 const response = await fetch('/api/videos', {
                     method: 'POST',
@@ -91,16 +99,24 @@ export default function Videos() {
                 if (!response.ok) {
                     throw new Error('Failed to create video');
                 }
+                setNotification({
+                    show: true,
+                    type: 'success',
+                    message: 'Video bolo úspešne vytvorené'
+                });
             }
             handleCloseModal();
             fetchVideos();
 
         } catch (error) {
             console.error(error);
+            setNotification({
+                show: true,
+                type: 'error',
+                message: error.message
+            });
         }
     };
-    
-    
 
     const deleteVideo = async (id) => {
         try {
@@ -108,11 +124,26 @@ export default function Videos() {
                 method: 'DELETE',
             });
             fetchVideos();
-            setDeleteSuccess(true);
+            setNotification({
+                show: true,
+                type: 'success',
+                message: 'Video bolo úspešne vymazané.'
+            });
         } catch (error) {
             console.error(error);
-            alert('Error deleting video');
+            setNotification({
+                show: true,
+                type: 'error',
+                message: 'Video sa nepodarilo vymazať'
+            });
         }
+    };
+
+    /* Functions */
+
+    const handleDeleteModalConfirm = async () => {
+        await deleteVideo(selectedVideoId);
+        setShowDeleteModal(false); // Close delete confirmation modal after deletion
     };
 
     const handleEdit = (video) => {
@@ -120,26 +151,38 @@ export default function Videos() {
         setData({ 'link': video.videoId, 'name': video.name });
         handleShowModal();
     };
-    
+
 
     const handleDelete = (videoId) => {
-        setSelectedVideoId(videoId); // Set the selected video ID for deletion
-        setShowDeleteModal(true); // Open delete confirmation modal
+        setSelectedVideoId(videoId);
+        setShowDeleteModal(true);
+    };
+
+    const isYouTubeLink = (link) => {
+        const youtubeRegex = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
+        return youtubeRegex.test(link);
     };
 
     return (
         <div>
+            <Head title="Videos" />
+
             <header>
                 <Navigation className='navbar' />
             </header>
-            <Notification show={deleteSuccess} onClose={() => setDeleteSuccess(false)} variant="success" message="Video was successfully deleted." />
+            <CustomNotification
+                show={notification.show}
+                onClose={() => setNotification({ ...notification, show: false })}
+                variant={notification.type}
+                message={notification.message}
+            />
 
             {auth.user && auth.user.admin && (
                 <Container fluid className="mt-5 d-flex justify-content-center align-items-center" >
                     <Button variant="dark mt-3 w-100" onClick={handleShowModal}>
                         Pridať video
                     </Button>
-
+                    
                     <Modal show={showModal} onHide={handleCloseModal} centered>
                         <Modal.Header closeButton>
                             <Modal.Title>{editData ? "Upraviť video" : "Pridať video"}</Modal.Title>
@@ -164,7 +207,7 @@ export default function Videos() {
                                         onChange={(e) => setData('name', e.target.value)}
                                     />
                                 </Form.Group>
-                                <Button variant="danger" type="submit">
+                                <Button variant="danger" type="submit" disabled={!data.link || !data.name || !isYouTubeLink(data.link)}>
                                     {editData ? "Uložiť zmeny" : "Potvrdiť"}
                                 </Button>
                             </Form>
@@ -191,7 +234,7 @@ export default function Videos() {
                                 </Card.Body>
                                 <Card.Footer>
                                     <h3 className='text-center'>{video.name}</h3>
-                                    {auth.user && auth.user.admin === 1 &&  (
+                                    {auth.user && auth.user.admin === 1 && (
                                         <div className='d-flex'>
                                             <Button className='w-50 mx-1' variant="warning" onClick={() => handleEdit(video)}>Upraviť</Button>
                                             <Button className='w-50 mx-1' variant="dark" onClick={() => handleDelete(video.id)}>Vymazať</Button>
@@ -203,7 +246,7 @@ export default function Videos() {
                     ))}
                 </Row>
             </Container>
-            <Footer></Footer>
+            <Footer />
         </div>
     );
 }

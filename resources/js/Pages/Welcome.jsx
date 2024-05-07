@@ -1,4 +1,4 @@
-import { Link, Head } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import Navigation from '@/Components/Navigation'; 
 import { Col, Row, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';

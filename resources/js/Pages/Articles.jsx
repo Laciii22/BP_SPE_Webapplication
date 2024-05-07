@@ -5,11 +5,12 @@ import Navigation from '@/Components/Navigation';
 import Footer from '@/Components/Footer';
 import { usePage } from '@inertiajs/react';
 import ConfirmationModal from '@/Components/ConfirmationModal';
+import { Head } from '@inertiajs/react';
+import CustomNotification from '@/Components/CustomNotification';
 
 
-
-const Articles = () => {
-    const { auth } = usePage().props; // Získanie údajov o autentifikácii z kontextu stránky
+export default function Videos() {
+    const { auth } = usePage().props;
     const [articles, setArticles] = useState([]);
     const [selectedArticle, setSelectedArticle] = useState(null);
     const [newArticle, setNewArticle] = useState({ title: '', content: '', source: '' });
@@ -18,7 +19,11 @@ const Articles = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [editedArticle, setEditedArticle] = useState({ title: '', content: '', source: '' });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+    const [notification, setNotification] = useState({
+        show: false,
+        type: '',
+        message: ''
+    });
 
     const handleEditInputChange = (e) => {
         const { name, value } = e.target;
@@ -35,19 +40,16 @@ const Articles = () => {
         setShowDeleteModal(false); // Close delete confirmation modal after deletion
     };
 
-
     const handleEdit = (article) => {
         setEditArticle(article);
         const editedData = {
             title: article.title,
             content: article.content,
-            source: article.source !== null ? article.source : '' // Ak je source null, nastavíme ho na prázdny reťazec
+            source: article.source !== null ? article.source : ''
         };
         setEditedArticle(editedData);
         setShowEditModal(true);
     };
-    
-
 
     const handleEditSubmit = async (e) => {
         e.preventDefault();
@@ -76,12 +78,20 @@ const Articles = () => {
             );
             setShowEditModal(false);
             fetchArticles();
+            setNotification({
+                show: true,
+                type: 'success',
+                message: 'Článok bol úspešne upravený'
+            });
         } catch (error) {
             console.error('Error updating article:', error);
+            setNotification({
+                show: true,
+                type: 'error',
+                message: 'Článok sa nepodarilo upraviť.'
+            });
         }
     };
-
-
 
     useEffect(() => {
         fetchArticles();
@@ -132,14 +142,24 @@ const Articles = () => {
             setArticles(prevState => ([...prevState, data]));
             setNewArticle({ title: '', content: '', source: '' });
             setShowModal(false);
+            setNotification({
+                show: true,
+                type: 'success',
+                message: 'Článok bol vytvorený úspešne.'
+            });
         } catch (error) {
             console.error('Error creating article:', error);
+            setNotification({
+                show: true,
+                type: 'error',
+                message: 'Článok sa nepodarilo vytvoriť.'
+            });
         }
     };
 
     const handleDelete = (articleId) => {
-        setSelectedArticle(articleId); // Set the selected video ID for deletion
-        setShowDeleteModal(true); // Open delete confirmation modal
+        setSelectedArticle(articleId);
+        setShowDeleteModal(true);
     };
 
     const deleteArticle = async (articleId) => {
@@ -154,18 +174,37 @@ const Articles = () => {
             if (selectedArticle && selectedArticle.id === articleId) {
                 setSelectedArticle(null);
             }
+            setShowDeleteModal(false);
+            setNotification({
+                show: true,
+                type: 'success',
+                message: 'Článok bol úspešne vymazaný.'
+            });
         } catch (error) {
             console.error('Error deleting article:', error);
+            setNotification({
+                show: true,
+                type: 'error',
+                message: 'Článok sa nepodarilo vymazať.'
+            });
         }
     };
 
-
     return (
         <div>
+            <Head title="Articles" />
             <div className="container min-vh-80" style={{ marginTop: '5rem' }}>
                 <header>
                     <Navigation />
                 </header>
+
+                <CustomNotification
+                    show={notification.show}
+                    onClose={() => setNotification({ ...notification, show: false })}
+                    variant={notification.type}
+                    message={notification.message}
+                />
+
                 <div className="row">
                     {/* Left column with all articles */}
                     <div className="col-lg-3 col-md-4 col-sm-5 mb-3 sm-md-0 text-center" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
@@ -189,7 +228,7 @@ const Articles = () => {
                             ))}
                         </div>
                         {auth.user && auth.user.admin === 1 && (
-                            <Button variant="primary" className='w-100 mt-2' onClick={() => setShowModal(true)}>Create New Article</Button>
+                            <Button variant="primary" className='w-100 mt-2' onClick={() => setShowModal(true)}>Vytvoriť nový článok</Button>
                         )}
 
                     </div>
@@ -273,4 +312,3 @@ const Articles = () => {
     );
 };
 
-export default Articles;

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateYoutubeLinksTable extends Migration
+class YoutubeLinks extends Migration
 {
     /**
      * Run the migrations.
@@ -15,8 +15,9 @@ class CreateYoutubeLinksTable extends Migration
     {
         Schema::create('youtube_links', function (Blueprint $table) {
             $table->id();
-            $table->string('link');
-            $table->string('name')->nullable();
+            $table->string('link')->unique(); // unikátní odkaz na youtube
+            $table->string('name')->nullable(); // volitelné jméno odkazu
+            $table->timestamps(); // automaticky vytvořené časové značky pro created_at a updated_at
         });
     }
 

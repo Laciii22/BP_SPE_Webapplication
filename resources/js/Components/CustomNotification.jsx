@@ -4,6 +4,9 @@ import { Alert } from 'react-bootstrap';
 const CustomNotification = ({ show, onClose, variant, message }) => {
     const [isVisible, setIsVisible] = useState(show);
 
+    
+
+
     useEffect(() => {
         setIsVisible(show);
 

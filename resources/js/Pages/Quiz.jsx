@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Question from '@/Components/Question';
 import Navigation from '@/Components/Navigation';
-import { usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import Footer from '@/Components/Footer';
 import AddNewQuestion from '@/Components/AddNewQuestion';
 import ConfirmationModal from '@/Components/ConfirmationModal';
-import Notification from '@/Components/CustomNotification';
+import CustomNotification from '@/Components/CustomNotification';
 
 const Quiz = () => {
     const [questions, setQuestions] = useState([]);
@@ -20,7 +20,12 @@ const Quiz = () => {
     const [selectedQuestionId, setSelectedQuestionId] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-    const [deleteSuccess, setDeleteSuccess] = useState(false); 
+    const [deleteSuccess, setDeleteSuccess] = useState(false);
+    const [notification, setNotification] = useState({
+        show: false,
+        type: '',
+        message: ''
+    });
 
 
 
@@ -60,14 +65,27 @@ const Quiz = () => {
 
 
     const confirmDeleteQuestion = async () => {
-        await fetch(`api/quiz/${selectedQuestionId}`, {
-            method: 'DELETE',
-        });
-        fetchQuestions();
-        setShowModal(false); 
-        setSelectedQuestionId(null); 
-        setDeleteSuccess(true);
-
+        try {
+            await fetch(`api/quiz/${selectedQuestionId}`, {
+                method: 'DELETE',
+            });
+            fetchQuestions();
+            setShowModal(false);
+            setSelectedQuestionId(null);
+            setDeleteSuccess(true);
+            setNotification({
+                show: true,
+                type: 'success',
+                message: 'Otázka úspešne odstránená.'
+            });
+        } catch (error) {
+            console.error(error);
+            setNotification({
+                show: true,
+                type: 'error',
+                message: 'Nepodarilo sa odstrániť otázku.'
+            });
+        }
     };
 
 
@@ -103,7 +121,7 @@ const Quiz = () => {
 
     const handleNewQuestionSubmit = async () => {
         if (correctAnswerIndex === null || !answers.some((answer) => answer.trim() !== '')) {
-            console.error('At least one answer and the correct answer must be provided.');
+            console.error('Je potrebné zadať aspoň jednu odpoveď a správnu odpoveď.');
             return;
         }
 
@@ -123,13 +141,23 @@ const Quiz = () => {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to add new question');
+                throw new Error('Nepodarilo sa pridať novú otázku');
             }
 
             setShowModal(false);
             fetchQuestions();
+            setNotification({
+                show: true,
+                type: 'success',
+                message: 'Nová otázka úspešne vytvorená.'
+            });
         } catch (error) {
             console.error(error);
+            setNotification({
+                show: true,
+                type: 'error',
+                message: 'Nepodarilo sa vytvoriť novú otázku.'
+            });
         }
     };
 
@@ -153,6 +181,7 @@ const Quiz = () => {
 
     return (
         <div>
+            <Head title="Quiz" />
             <Navigation />
             <div className="container mb-3 min-vh-100" style={{ marginTop: '5rem' }}>
                 {auth.user && auth.user.admin === 1 && (
@@ -180,8 +209,13 @@ const Quiz = () => {
                     </div>
                 ))}
 
-                <Notification show={deleteSuccess} onClose={() => setDeleteSuccess(false)} variant="success" message="Otázka bola úspešne vymazaná" />
 
+                <CustomNotification
+                    show={notification.show}
+                    onClose={() => setNotification({ ...notification, show: false })}
+                    variant={notification.type}
+                    message={notification.message}
+                />
 
                 {/* Confirmation Modal */}
                 <ConfirmationModal
