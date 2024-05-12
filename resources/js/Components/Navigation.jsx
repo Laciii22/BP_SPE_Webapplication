@@ -7,6 +7,8 @@ import { handleScroll } from '@/Utilities/scrollFunction';
 function Navigation() {
   const { auth } = usePage().props; // Získanie údajov o autentifikácii z kontextu stránky
   const page = usePage(); // Získanie údajov o aktuálnej stránke
+  const excludedPages = ['/profile', '/videos', '/quiz', '/articles'];
+
 
   const scrollTo = (target) => {
     handleScroll(target);
@@ -24,7 +26,7 @@ function Navigation() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              {page.url !== '/profile' && page.url !== '/videos' && page.url !== '/quiz' &&  page.url !== '/articles' &&(
+              {!excludedPages.includes(page.url) && (
                 <>
                   <Nav.Link onClick={() => scrollTo('spe')}>
                     O SPE
@@ -43,11 +45,12 @@ function Navigation() {
                       10BASE-T1L
                     </NavDropdown.Item>
                   </NavDropdown>
-                  <Nav.Link as={Link} href={route('articles')}>Články</Nav.Link>
-                  <Nav.Link as={Link} href={route('videos')}>Videá</Nav.Link>
-                  <Nav.Link as={Link} href={auth.user ? route('quiz') : route('login')}>Otestuj sa!</Nav.Link>
                 </>
               )}
+              <Nav.Link as={Link} href={route('articles')}>Články</Nav.Link>
+              <Nav.Link as={Link} href={route('videos')}>Videá</Nav.Link>
+              <Nav.Link as={Link} href={auth.user ? route('quiz') : route('login')}>Otestuj sa!</Nav.Link>
+
             </Nav>
             <Nav className="justify-content-end ">
               {auth.user ? (
@@ -68,7 +71,7 @@ function Navigation() {
                 </>
               ) : (
                 <>
-                  {page.url.pathname !== '/profile' && ( 
+                  {page.url.pathname !== '/profile' && (
                     <>
                       <Nav.Link as={Link} href={route('login')}>
                         Prihlásenie

@@ -193,7 +193,7 @@ export default function Videos() {
     return (
         <div>
             <Head title="Articles" />
-            <div className="container min-vh-80" style={{ marginTop: '5rem' }}>
+            <div className="container min-vh-100" style={{ marginTop: '5rem' }}>
                 <header>
                     <Navigation />
                 </header>
@@ -207,7 +207,7 @@ export default function Videos() {
 
                 <div className="row">
                     {/* Left column with all articles */}
-                    <div className="col-lg-3 col-md-4 col-sm-5 mb-3 sm-md-0 text-center" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+                    <div className="col-lg-3 col-md-4 col-sm-5  sm-md-0 text-center" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
                         <div className="list-group">
                             {articles.map(article => (
                                 <button
@@ -234,7 +234,7 @@ export default function Videos() {
                     </div>
 
                     {/* Right column with the selected article */}
-                    <div className="col-lg-9 col-md-8 col-sm-7 bg-light rounded mb-3">
+                    <div className="col-lg-9 col-md-8 col-sm-7 bg-light rounded ">
                         {selectedArticle && (
                             <Article
                                 title={selectedArticle.title}
