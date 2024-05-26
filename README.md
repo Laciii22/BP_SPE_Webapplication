@@ -61,18 +61,10 @@ composer install
 composer update
 ```
 
-## Users with credentials
-
-| name       | email             | password | admin |
-|------------|-------------------|----------|-------|
-| John Doe   | user1@example.com | password | false |
-| Jane Doe   | user2@example.com | password | false |
-| Admin      | admin@example.com | Admin1234| true  |
-
 ## Run project
 
 
-#### 2. Run install command for frontend and build the frontend
+#### 5. Run install command for frontend and build the frontend
 
 
 ```sh
@@ -80,7 +72,7 @@ npm install
 npm run build
 ```
 
-#### 3. Change your .env for your own mysql databse, or use SQLite (this is current settings)
+#### 6. Change your .env for your own mysql databse, or use SQLite (this is current settings)
 
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
@@ -95,22 +87,30 @@ Idk if this is needed but i have to done it before running the application
 php artisan key:generate
 ```
 
-### 4. Run migrations and seeders
+### 7. Run migrations and seeders
 
 ```sh
 php artisan migrate
 php artisan db:seed
 ```
 
-### 5. Build and run the frontend
+### 8. Build and run the frontend
 
 ```sh
 npm install
 ```
 
-### 6. Run Laravel application
+### 9. Run Laravel application
 
 ```sh
 php artisan serve
 npm run dev
 ```
+
+## Users with credentials
+
+| name       | email             | password | admin |
+|------------|-------------------|----------|-------|
+| John Doe   | user1@example.com | password | false |
+| Jane Doe   | user2@example.com | password | false |
+| Admin      | admin@example.com | Admin1234| true  |
