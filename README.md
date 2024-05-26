@@ -76,19 +76,11 @@ composer update
 
 
 ```sh
-npm run install
+npm install
 npm run build
 ```
 
-#### 3. Run migrations + seeders with running container with MySQL
-
-```sh
-php artisan migrate
-php artisan db:seed
-
-```
-
-#### 4. Change your .env for your own mysql databse, or use SQLite (this is current settings)
+#### 3. Change your .env for your own mysql databse, or use SQLite (this is current settings)
 
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
@@ -103,20 +95,20 @@ Idk if this is needed but i have to done it before running the application
 php artisan key:generate
 ```
 
-### 3. Run migrations and seeders
+### 4. Run migrations and seeders
 
 ```sh
 php artisan migrate
 php artisan db:seed
 ```
 
-### 4. Build and run the frontend
+### 5. Build and run the frontend
 
 ```sh
-npm run install
+npm install
 ```
 
-### 5. Run Laravel application
+### 6. Run Laravel application
 
 ```sh
 php artisan serve
