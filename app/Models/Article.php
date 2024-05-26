@@ -26,6 +26,4 @@ class Article extends Model
         'content',
         'source',
     ];
-
-    // You can define relationships here if needed
 }

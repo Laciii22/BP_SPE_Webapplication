@@ -1,66 +1,124 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Building a SPE web application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Introduction
 
-## About Laravel
+This guide provides a step-by-step approach to building a my Single Pair Ethernet E-learning web application. 
+## Prerequisites
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Before you begin, make sure you have the following prerequisites installed on your system:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP
+- Composer
+- Node.js
+- NPM
+- Docker 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Steps
 
-## Learning Laravel
+### 1. Install PHP
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Start by installing PHP, Composer, follow steps:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- PHP - <https://www.geeksforgeeks.org/how-to-install-php-in-windows-10/>'
+- Node, npm - <https://nodejs.org/en/download>
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 2. Install Composer
 
-## Laravel Sponsors
+Follow steps:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- <https://getcomposer.org/download/>
 
-### Premium Partners
+After installation rerun terminal and run, you should see output about version of Composer
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```sh
+composer -v
+```
 
-## Contributing
+### 3. Update php.ini file
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Click on windows search icon and type ```php.ini```. Open the file and uncomment these extensions
 
-## Code of Conduct
+```sh
+extension=fileinfo
+extension=gd
+extension=pdo_mysql
+extension=pdo_odbc
+extension=pdo_pgsql
+extension=pdo_sqlite
+extension=pgsql
+extension=zip
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Update/Install Composer dependencies
 
-## Security Vulnerabilities
+First try to run composer install to install the dependencies, if it failed run update first
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```sh
+composer install
+```
 
-## License
+```sh
+composer update
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Users with credentials
+
+| name       | email             | password | admin |
+|------------|-------------------|----------|-------|
+| John Doe   | user1@example.com | password | false |
+| Jane Doe   | user2@example.com | password | false |
+| Admin      | admin@example.com | Admin1234| true  |
+
+## Run project
+
+
+#### 2. Run install command for frontend and build the frontend
+
+
+```sh
+npm run install
+npm run build
+```
+
+#### 3. Run migrations + seeders with running container with MySQL
+
+```sh
+php artisan migrate
+php artisan db:seed
+
+```
+
+#### 4. Change your .env for your own mysql databse, or use SQLite (this is current settings)
+
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=speApp
+    DB_USERNAME=root
+    DB_PASSWORD=root
+
+Idk if this is needed but i have to done it before running the application
+
+```sh
+php artisan key:generate
+```
+
+### 3. Run migrations and seeders
+
+```sh
+php artisan migrate
+php artisan db:seed
+```
+
+### 4. Build and run the frontend
+
+```sh
+npm run install
+```
+
+### 5. Run Laravel application
+
+```sh
+php artisan serve
+npm run dev
+```
