@@ -26,7 +26,6 @@ function MainContent() {
                     <Row className='justify-content-center'>
                         <Col lg={5} className='text-justify mb-3 mb-md-3'>
                             Single Pair Ethernet je komunikačný a prenosový štandard, ktorý umožňuje prenos dát prostredníctvom jediného páru medených vodičov.
-                            Tento pár vodičov môže byť kategórie 5e, 6 alebo 6A, čo znamená, že gigabitový Single Pair Ethernet (SPE) využíva existujúcu inštalovanú infraštruktúru Ethernetu.
                             Rozvoj tohto štandardu umožňuje prenos dát na rýchlostiach až do 1 Gbps, čo ho robí vhodným pre mnoho moderných aplikácií.
                         </Col>
                         <Col lg={1}></Col>
