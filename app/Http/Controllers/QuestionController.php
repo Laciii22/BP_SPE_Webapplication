@@ -5,79 +5,91 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Answer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class QuestionController extends Controller
 {
     /**
-     * Zobrazí zoznam všetkých otázek spolu s odpověďmi.
+     * Display a listing of all questions along with their answers.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        // Načtěte všechny otázky spolu s odpověďmi
-        $questions = Question::with('answers')->get();
-
-        return response()->json($questions);
+        try {
+            // Load all questions along with their answers
+            $questions = Question::with('answers')->get();
+            return response()->json($questions);
+        } catch (\Exception $e) {
+            Log::error('Error fetching questions: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while fetching the questions.'], 500);
+        }
     }
 
     /**
-     * Zobrazí detaily konkrétne otázky spolu s odpověďmi.
+     * Display the details of a specific question along with its answers.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        // Načtěte konkrétní otázku spolu s odpověďmi
-        $question = Question::with('answers')->findOrFail($id);
-
-        return response()->json($question);
+        try {
+            // Load the specific question along with its answers
+            $question = Question::with('answers')->findOrFail($id);
+            return response()->json($question);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::warning('Question not found for ID: ' . $id);
+            return response()->json(['error' => 'Question not found.'], 404);
+        } catch (\Exception $e) {
+            Log::error('Error fetching question for ID ' . $id . ': ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while fetching the question.'], 500);
+        }
     }
 
     /**
-     * Uloží novú otázku a odpovede do databázy.
+     * Store a newly created question and its answers in the database.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    /**
- * Uloží novú otázku a odpovede do databázy.
- *
- * @param  \Illuminate\Http\Request  $request
- * @return \Illuminate\Http\Response
- */
-public function store(Request $request)
-{
-    // Validácia požiadaviek
-    $validatedData = $request->validate([
-        'question' => 'required|string',
-        'answers' => 'required|array|min:2', // Minimálne dve odpovede
-        'answers.*.text' => 'string|required', // Text odpovede
-        'answers.*.correct' => 'boolean|required', // Indikátor správnej odpovede
-    ]);
+    public function store(Request $request)
+    {
+        try {
+            // Validate the request
+            $validatedData = $request->validate([
+                'question' => 'required|string|max:255',
+                'answers' => 'required|array|min:2', // Minimum of two answers
+                'answers.*.text' => 'required|string|max:255', // Answer text
+                'answers.*.correct' => 'required|boolean', // Indicator of correct answer
+            ]);
 
-    // Vytvorenie novej otázky
-    $question = new Question();
-    $question->question = $validatedData['question'];
-    $question->save();
+            // Create a new question
+            $question = new Question();
+            $question->question = $validatedData['question'];
+            $question->save();
 
-    // Vytvorenie odpovedí pre otázku
-    foreach ($validatedData['answers'] as $answerData) {
-        $answer = new Answer();
-        $answer->answer_text = $answerData['text']; // Použite stĺpec answer_text namiesto answer
-        $answer->correct_answer = $answerData['correct']; // Indikátor správnej odpovede
-        $answer->question_id = $question->id;
-        $answer->save();
+            // Create answers for the question
+            foreach ($validatedData['answers'] as $answerData) {
+                $answer = new Answer();
+                $answer->answer_text = $answerData['text']; // Use column answer_text instead of answer
+                $answer->correct_answer = $answerData['correct']; // Indicator of correct answer
+                $answer->question_id = $question->id;
+                $answer->save();
+            }
+
+            return response()->json($question, 201); // 201 Created
+        } catch (ValidationException $e) {
+            return response()->json(['error' => 'Validation failed', 'messages' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            Log::error('Error storing question: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while creating the question.'], 500);
+        }
     }
 
-    return response()->json($question, 201); // 201 Created
-}
-
-
-
     /**
-     * Odstráni konkrétnu otázku z databázy.
+     * Remove the specified question from storage.
      *
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
@@ -86,9 +98,10 @@ public function store(Request $request)
     {
         try {
             $question->delete();
-            return response()->json([], 200);
+            return response()->json([], 204); // 204 No Content
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500); // 500 Internal Server Error
+            Log::error('Error deleting question: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while deleting the question.'], 500);
         }
     }
 }

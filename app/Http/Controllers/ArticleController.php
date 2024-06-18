@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class ArticleController extends Controller
 {
@@ -14,8 +16,13 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
-        return response()->json($articles);
+        try {
+            $articles = Article::all();
+            return response()->json($articles);
+        } catch (\Exception $e) {
+            Log::error('Error fetching articles: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while fetching the articles.'], 500);
+        }
     }
 
     /**
@@ -26,14 +33,21 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string',
-            'content' => 'required|string',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'title' => 'required|string|max:255',
+                'content' => 'required|string',
+            ]);
 
-        $article = Article::create($request->all());
+            $article = Article::create($validatedData);
 
-        return response()->json($article, 201);
+            return response()->json($article, 201);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => 'Validation failed', 'messages' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            Log::error('Error storing article: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while creating the article.'], 500);
+        }
     }
 
     /**
@@ -45,14 +59,21 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        $request->validate([
-            'title' => 'string',
-            'content' => 'string',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'title' => 'sometimes|required|string|max:255',
+                'content' => 'sometimes|required|string',
+            ]);
 
-        $article->update($request->all());
+            $article->update($validatedData);
 
-        return response()->json($article, 200);
+            return response()->json($article, 200);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => 'Validation failed', 'messages' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            Log::error('Error updating article: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while updating the article.'], 500);
+        }
     }
 
     /**
@@ -63,8 +84,12 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        $article->delete();
-
-        return response()->json(null, 204);
+        try {
+            $article->delete();
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            Log::error('Error deleting article: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while deleting the article.'], 500);
+        }
     }
 }

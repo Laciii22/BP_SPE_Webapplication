@@ -10,7 +10,8 @@ const Article = ({ title, text, source }) => {
                         <h2 className="mb-4">{title}</h2>
                         <p className="text-justify ms-4">{text}</p>
                         {source && (
-                            <p className="mt-3 text-end">Source: <a href={source} target="_blank" rel="noopener noreferrer">{source}</a></p>
+                            <p className="mt-3 text-end">Source: <a href={source}
+                             target="_blank" rel="noopener noreferrer">{source}</a></p>
                         )}
                     </div>
                 </div>

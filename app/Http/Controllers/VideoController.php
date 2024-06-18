@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class VideoController extends Controller
 {
@@ -14,8 +16,13 @@ class VideoController extends Controller
      */
     public function index()
     {
-        $videos = Video::all();
-        return response()->json($videos);
+        try {
+            $videos = Video::all();
+            return response()->json($videos);
+        } catch (\Exception $e) {
+            Log::error('Error fetching videos: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while fetching the videos.'], 500);
+        }
     }
 
     /**
@@ -23,13 +30,21 @@ class VideoController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     * @param  \Illuminate\Http\Request  $request
      */
     public function show($id)
     {
-        $video = Video::findOrFail($id);
-        return response()->json($video);
+        try {
+            $video = Video::findOrFail($id);
+            return response()->json($video);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::warning('Video not found for ID: ' . $id);
+            return response()->json(['error' => 'Video not found.'], 404);
+        } catch (\Exception $e) {
+            Log::error('Error fetching video for ID ' . $id . ': ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while fetching the video.'], 500);
+        }
     }
+
     /**
      * Store a newly created video in the database.
      *
@@ -38,19 +53,26 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
-        // Data validation from the form
-        $request->validate([
-            'link' => 'required|url',
-            'name' => 'string|max:255',
-        ]);
-    
-        // Create a new record in the database
-        $video = Video::create([
-            'link' => $request->link,
-            'name' => $request->name,
-        ]);
-    
-        return response()->json($video, 201);
+        try {
+            // Data validation from the form
+            $request->validate([
+                'link' => 'required|url',
+                'name' => 'string|max:255',
+            ]);
+
+            // Create a new record in the database
+            $video = Video::create([
+                'link' => $request->link,
+                'name' => $request->name,
+            ]);
+
+            return response()->json($video, 201); // 201 Created
+        } catch (ValidationException $e) {
+            return response()->json(['error' => 'Validation failed', 'messages' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            Log::error('Error storing video: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while creating the video.'], 500);
+        }
     }
 
     /**
@@ -61,7 +83,13 @@ class VideoController extends Controller
      */
     public function destroy(Video $video)
     {
-        $video->delete();
+        try {
+            $video->delete();
+            return response()->json([], 204); // 204 No Content
+        } catch (\Exception $e) {
+            Log::error('Error deleting video: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while deleting the video.'], 500);
+        }
     }
 
     /**
@@ -73,16 +101,23 @@ class VideoController extends Controller
      */
     public function update(Request $request, Video $video)
     {
-        $request->validate([
-            'link' => 'required|url',
-            'name' => 'string|max:255',
-        ]);
+        try {
+            $request->validate([
+                'link' => 'required|url',
+                'name' => 'string|max:255',
+            ]);
 
-        $video->update([
-            'link' => $request->link,
-            'name' => $request->name,
-        ]);
+            $video->update([
+                'link' => $request->link,
+                'name' => $request->name,
+            ]);
 
-        return response()->json($video, 200);
-    }   
+            return response()->json($video, 200); // 200 OK
+        } catch (ValidationException $e) {
+            return response()->json(['error' => 'Validation failed', 'messages' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            Log::error('Error updating video: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while updating the video.'], 500);
+        }
+    }
 }
